@@ -26,7 +26,12 @@ export default component$(() => {
                 <div key={blog.id}>
                   <h3>{blog.title}</h3>
                   <p>{blog.content.slice(0, 50)}...</p>
-                  <Link href={"/blog/" + blog.id}>Read More</Link>
+                  <Link
+                    href={"/blog/" + blog.id}
+                    class="rounded bg-red-500 text-white px-4 py-2 mt-2 inline-block"
+                  >
+                    Read More
+                  </Link>
                 </div>
               ))}
           </div>
