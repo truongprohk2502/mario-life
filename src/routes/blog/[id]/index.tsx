@@ -7,8 +7,13 @@ export interface BlogData {
   content: string;
 }
 
-export const useBlog = routeLoader$(async ({ params }) => {
+export const useBlog = routeLoader$(async ({ params, redirect }) => {
   const res = await fetch("http://localhost:3000/blogs/" + params.id);
+
+  if (!res.ok) {
+    throw redirect(302, "/");
+  }
+
   const data = await res.json();
 
   return data as BlogData;
