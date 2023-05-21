@@ -1,4 +1,4 @@
-import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import styles from "./styles.css?inline";
 import Modal from "~/components/modal";
 
@@ -6,6 +6,10 @@ export default component$(() => {
   useStyles$(styles);
 
   const modalVisible = useSignal<boolean>(false);
+
+  const closeModal = $(() => {
+    modalVisible.value = false;
+  });
 
   return (
     <article>
@@ -31,7 +35,7 @@ export default component$(() => {
       <button onClick$={() => (modalVisible.value = true)}>Open Modal</button>
 
       {modalVisible.value && (
-        <Modal size="sm" frosted>
+        <Modal size="sm" frosted close={closeModal}>
           <div>some modal content</div>
           <div q:slot="content">
             <h3>Great News!!</h3>
