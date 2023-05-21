@@ -1,5 +1,6 @@
 import { component$, Slot } from "@builder.io/qwik";
 import Header from "../components/header";
+import type { DocumentHead } from "@builder.io/qwik-city";
 
 export default component$(() => {
   return (
@@ -16,3 +17,13 @@ export default component$(() => {
     </>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Mario Life",
+  meta: [
+    {
+      name: "description",
+      content: "a blog site about everything Super Mario related",
+    },
+  ],
+};

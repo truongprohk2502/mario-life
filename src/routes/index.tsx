@@ -1,55 +1,37 @@
-import { component$, useSignal, useStore } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { Resource, component$ } from "@builder.io/qwik";
+import { routeLoader$, Link } from "@builder.io/qwik-city";
+import type { BlogData } from "./blog/[id]";
 
-interface IPerson {
-  name: string;
-  age: number;
-}
+export const useBlogs = routeLoader$(async () => {
+  const res = await fetch("http://localhost:3000/blogs");
+  const data = await res.json();
 
-interface IBlog {
-  id: number;
-  title: string;
-}
+  return data as BlogData[];
+});
 
 export default component$(() => {
-  const name = useSignal<string>("mario");
-  const person = useStore<IPerson>({
-    name: "peach",
-    age: 30,
-  });
-  const blogs = useStore<IBlog[]>([
-    { id: 1, title: "my first blog" },
-    { id: 2, title: "my second blog" },
-    { id: 3, title: "marmite rules!" },
-  ]);
+  const blogsData = useBlogs();
 
   return (
     <div>
       <h1>Okie Dokie!</h1>
 
-      <p>Hello, {name.value}</p>
-      <p>
-        Hello, {person.name}, you are {person.age} years young
-      </p>
-
-      <button onClick$={() => (name.value = "luigi")}>click me</button>
-      <button onClick$={() => (person.name = "bowser")}>click me again</button>
-
-      {blogs.map((blog) => (
-        <div key={blog.id}>{blog.title}</div>
-      ))}
-
-      <button onClick$={() => blogs.pop()}>remove a blog</button>
+      <Resource
+        value={blogsData}
+        onPending={() => <div>Loading blogs...</div>}
+        onResolved={(blogs) => (
+          <div class="blogs">
+            {blogs &&
+              blogs.map((blog) => (
+                <div key={blog.id}>
+                  <h3>{blog.title}</h3>
+                  <p>{blog.content.slice(0, 50)}...</p>
+                  <Link href={"/blog/" + blog.id}>Read More</Link>
+                </div>
+              ))}
+          </div>
+        )}
+      />
     </div>
   );
 });
-
-export const head: DocumentHead = {
-  title: "Mario Life",
-  meta: [
-    {
-      name: "description",
-      content: "a blog site about everything Super Mario related",
-    },
-  ],
-};
