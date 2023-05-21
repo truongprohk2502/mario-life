@@ -1,8 +1,11 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import styles from "./styles.css?inline";
+import Modal from "~/components/modal";
 
 export default component$(() => {
   useStyles$(styles);
+
+  const modalVisible = useSignal<boolean>(false);
 
   return (
     <article>
@@ -24,6 +27,26 @@ export default component$(() => {
         illo nesciunt, fuga beatae tenetur, delectus cumque asperiores vitae
         earum ad et eum officia quo aspernatur cum unde nemo assumenda soluta?
       </p>
+
+      <button onClick$={() => (modalVisible.value = true)}>Open Modal</button>
+
+      {modalVisible.value && (
+        <Modal size="sm" frosted>
+          <div>some modal content</div>
+          <div q:slot="content">
+            <h3>Great News!!</h3>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
+              aspernatur itaque praesentium quasi aut culpa? Maiores enim
+              repellendus inventore eius alias, impedit sit fugiat laudantium
+              nobis at illum ipsum non.
+            </p>
+          </div>
+          <div q:slot="footer">
+            <button>Sign up now!</button>
+          </div>
+        </Modal>
+      )}
     </article>
   );
 });
